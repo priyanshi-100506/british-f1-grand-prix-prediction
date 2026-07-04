@@ -112,7 +112,8 @@ def get_british_gp_data(years=(2021, 2022, 2023, 2024, 2025)):
 
 def get_upcoming_british_gp_prediction(year=2026, event_name="British Grand Prix", historical_data=None):
     if historical_data is None:
-        historical_data = get_british_gp_data(years=(2021, 2022, 2023, 2024, 2025))
+        # Fetch only the most recent year for a fast fallback instead of 5 years!
+        historical_data = get_british_gp_data(years=(2025,))
 
     try:
         qualifying = fastf1.get_session(year, event_name, "Q")

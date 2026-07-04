@@ -10,8 +10,13 @@ app = FastAPI(title="British GP Predictor", version="1.0.0")
 
 # Load models once at startup
 print("Loading models at application startup...")
-startup_data = data_loader.get_british_gp_data(years=(2021, 2022, 2023, 2024, 2025))
-GLOBAL_MODEL_BUNDLE = model_store.get_or_train_models(startup_data)
+GLOBAL_MODEL_BUNDLE = model_store.load_models()
+startup_data = None
+
+if GLOBAL_MODEL_BUNDLE is None:
+    print("Models not found, fetching historical data to train...")
+    startup_data = data_loader.get_british_gp_data(years=(2021, 2022, 2023, 2024, 2025))
+    GLOBAL_MODEL_BUNDLE = model_store.get_or_train_models(startup_data)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
