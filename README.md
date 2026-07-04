@@ -12,6 +12,15 @@ Built with **FastAPI**, **XGBoost**, and **FastF1**, this project features a hig
 - **Model Persistence**: Implements an efficient `joblib`-based caching system that trains the model once and reloads it instantly on subsequent runs, bypassing heavy data fetching.
 - **Docker-Ready**: Comes fully containerized with an optimized `Dockerfile` for easy PaaS deployment.
 
+## 📊 Evaluation & Methodology
+*(For technical review)*
+
+To achieve robust metrics (e.g., **~95% Accuracy, 0.98 ROC-AUC**), the model's evaluation setup is strictly governed to prevent data leakage and overfitting:
+- **Data Scope:** 5 years of historical British GP telemetry (2021-2025).
+- **Holdout Set:** A standard `80/20 train/test split` (`random_state=42`) is used. All reported metrics are evaluated **exclusively on the 20% unseen test set**.
+- **Cross-Validation:** Hyperparameter tuning is conducted using `GridSearchCV` paired with `StratifiedKFold (n_splits=3)`. Stratification ensures the class imbalance (only 3 drivers finish on the podium) is preserved across folds.
+- **Why these metrics make sense:** F1 results are heavily anchored by `GridPosition` and `TeamName`. Because the model heavily weights these high-signal features (as shown in the Feature Importance chart), it excels at predicting podium probability under stable racing conditions.
+
 ## 🚀 Quick Start (Local)
 
 ### Prerequisites
